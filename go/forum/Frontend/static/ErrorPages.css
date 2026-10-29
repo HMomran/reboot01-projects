@@ -1,0 +1,215 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 50px;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    min-height: 100vh;
+    color: #e8e8e8;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 2rem 0;
+}
+
+/* تأثير النقاط اللامعة */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="a" cx="50%" cy="50%" r="50%"><stop offset="0%" style="stop-color:rgba(255,255,255,0.1)"/><stop offset="100%" style="stop-color:rgba(255,255,255,0)"/></radialGradient></defs><circle cx="20" cy="20" r="2" fill="url(%23a)"/><circle cx="80" cy="80" r="1.5" fill="url(%23a)"/><circle cx="40" cy="70" r="1" fill="url(%23a)"/><circle cx="90" cy="30" r="1.2" fill="url(%23a)"/><circle cx="10" cy="50" r="0.8" fill="url(%23a)"/></svg>') repeat;
+    opacity: 0.25;
+    animation: float 20s infinite linear;
+    z-index: -1;
+}
+
+@keyframes float {
+    0% { transform: translateX(0) translateY(0); }
+    100% { transform: translateX(-100px) translateY(-100px); }
+}
+
+/* الصندوق الشفاف */
+.error-container {
+    max-width: 600px;
+    padding: 3rem 2rem;
+    background: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(71, 85, 105, 0.4);
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* العنوان */
+.error-container h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(45deg, #e8e8e8, #cbd5e1, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* النص */
+.error-container p {
+    color: rgba(203, 213, 225, 0.95);
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* أزرار الحركة */
+.error-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* الزر بنفس لون Welcome */
+.error-actions a {
+    display: inline-block;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    color: #e8e8e8;
+    border: 2px solid rgba(71, 85, 105, 0.4);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.error-actions a:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+    border-color: rgba(100, 116, 139, 0.6);
+    box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
+}
+
+/* التمرير */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #1e40af, #3b82f6);
+    border-radius: 10px;
+    border: 2px solid rgba(71, 85, 105, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #3b82f6, #60a5fa);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 1.5rem 1rem;
+    }
+
+    .error-container {
+        max-width: 90%;
+        padding: 2.5rem 1.8rem;
+        border-radius: 18px;
+    }
+
+    .error-container h1 {
+        font-size: 2.5rem;
+    }
+
+    .error-container p {
+        font-size: 1.1rem;
+        margin-bottom: 1.8rem;
+    }
+
+    .error-actions {
+        gap: 0.8rem;
+    }
+
+    .error-actions a {
+        padding: 0.9rem 1.8rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 1rem 0.75rem;
+    }
+
+    .error-container {
+        max-width: 100%;
+        padding: 2rem 1.5rem;
+        border-radius: 16px;
+    }
+
+    .error-container h1 {
+        font-size: 2rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .error-container p {
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+    }
+
+    .error-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .error-actions a {
+        width: 100%;
+        padding: 0.9rem 1.5rem;
+        font-size: 0.95rem;
+        border-radius: 12px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 360px) {
+    .error-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .error-container h1 {
+        font-size: 1.7rem;
+    }
+
+    .error-container p {
+        font-size: 0.95rem;
+    }
+
+    .error-actions a {
+        padding: 0.8rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
+

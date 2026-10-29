@@ -1,0 +1,523 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  /* IMPORTANT: don’t center vertically; allow page to scroll naturally */
+  justify-content: flex-start;
+
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #0a1929;
+  color: #e0e0e0;
+  padding: 20px;
+
+  /* allow vertical scroll when zoom > 100% makes viewport smaller */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+body.game-active {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #4fc3f7;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+#startScreen {
+  background: #1e293b;
+  border: 2px solid #334155;
+  padding: 40px;
+  text-align: center;
+  min-width: 400px;
+}
+
+.start-content h2 {
+  color: #4fc3f7;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+#usernameInput {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px solid #475569;
+  background: #334155;
+  color: #fff;
+  margin-bottom: 20px;
+  outline: none;
+}
+
+#usernameInput:focus {
+  border-color: #4fc3f7;
+}
+
+.start-content button {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  background: #4fc3f7;
+  color: #0a1929;
+  font-weight: 600;
+}
+
+.start-content button:hover {
+  background: #29b6f6;
+}
+
+#usernameConfirm {
+  margin-top: 20px;
+  padding: 20px;
+  background: #1e3a5f;
+  border: 2px solid #4fc3f7;
+}
+
+#usernameConfirm[hidden] {
+  display: none;
+}
+
+#confirmMessage {
+  color: #e0e0e0;
+  font-size: 1rem;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.confirm-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.confirm-buttons button {
+  width: 100px;
+  padding: 10px;
+  margin: 0;
+}
+
+#gameInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 800px;
+  margin-bottom: 10px;
+  padding: 12px 20px;
+  background: #1e293b;
+  border: 2px solid #334155;
+  gap: 15px;
+  position: relative;
+}
+
+#gameInfo[hidden] {
+  display: none;
+}
+
+#gameInfoNotification {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(239, 83, 80, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  z-index: 10;
+  animation: pulse 0.5s ease-in-out infinite alternate;
+  white-space: pre-line;
+  text-align: center;
+}
+
+#gameInfoNotification[hidden] {
+  display: none;
+}
+
+@keyframes pulse {
+  from { opacity: 0.9; }
+  to { opacity: 1; }
+}
+
+#Time, #Score, #lives, #roundInfo, #fps {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  background: #132743;
+  border: 1px solid #475569;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+#Time {
+  color: #4fc3f7;
+}
+
+#Score {
+  color: #66bb6a;
+}
+
+#lives {
+  color: #ef5350;
+}
+
+#roundInfo {
+  color: #ffa726;
+}
+
+#fps {
+  font-size: 0.9rem;
+  color: #ffa726;
+}
+
+#border {
+  position: relative;
+
+  /* fixed game size */
+  width: 800px;
+  height: 600px;
+
+  /* prevent flexbox from shrinking it when zoomed */
+  flex-shrink: 0;
+
+  /* also enforce minimums just in case */
+  min-width: 800px;
+  min-height: 600px;
+
+  background: #132743;
+  border: 2px solid #1e3a5f;
+}
+
+#bricks {
+  position: absolute;
+  top: 60px;
+  left: 20px;
+  right: 20px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-gap: 6px;
+}
+
+.brick {
+  height: 25px;
+  background: #4fc3f7;
+  border: 1px solid #475569;
+}
+
+#paddle {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  width: 120px;
+  height: 18px;
+  background: #4fc3f7;
+  border: 1px solid #475569;
+}
+
+#ball {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  background: #4fc3f7;
+  border-radius: 50%;
+}
+
+#launchMessage {
+  position: absolute;
+  top: 250px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  width: fit-content;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4fc3f7;
+  background: #132743;
+  padding: 20px 40px;
+  border: 2px solid #4fc3f7;
+}
+
+#launchMessage[hidden] {
+  display: none;
+}
+
+#pauseMenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #132743;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: #ffffff;
+}
+
+#pauseMenu[hidden] {
+  display: none;
+}
+
+#pauseMenu h2 {
+  font-size: 2.2rem;
+  color: #4fc3f7;
+  margin-bottom: 10px;
+}
+
+#pauseMenu p {
+  font-size: 1.1rem;
+  color: #b0bec5;
+  margin-bottom: 20px;
+}
+
+#pauseMenu button {
+  padding: 12px 32px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  background: #4fc3f7;
+  color: #0a1929;
+  font-weight: 600;
+}
+
+#pauseMenu button:hover {
+  background: #29b6f6;
+}
+
+#gameOverMenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #132743;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  color: #ffffff;
+}
+
+#gameOverMenu[hidden] {
+  display: none;
+}
+
+#gameOverMenu h2 {
+  font-size: 2.2rem;
+  color: #ef5350;
+  margin-bottom: 10px;
+}
+
+#gameOverMenu p {
+  font-size: 1.1rem;
+  color: #b0bec5;
+  margin-bottom: 20px;
+}
+
+#gameOverMenu button {
+  padding: 12px 32px;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  background: #4fc3f7;
+  color: #0a1929;
+  font-weight: 600;
+}
+
+#gameOverMenu button:hover {
+  background: #29b6f6;
+}
+
+#leaderboard {
+  margin: 20px 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background: #1e293b;
+  padding: 15px;
+  border: 1px solid #334155;
+}
+
+#leaderboard h3 {
+  color: #4fc3f7;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+#leaderboardTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#leaderboardTable th {
+  background: #132743;
+  color: #4fc3f7;
+  padding: 10px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+#leaderboardTable td {
+  padding: 8px 10px;
+  border-top: 1px solid #334155;
+  color: #e0e0e0;
+  font-size: 0.9rem;
+}
+
+#leaderboardTable tr:hover {
+  background: #1e3a5f;
+}
+
+#leaderboard::-webkit-scrollbar {
+  width: 6px;
+}
+
+#leaderboard::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+#leaderboard::-webkit-scrollbar-thumb {
+  background: #4fc3f7;
+}
+
+#notification {
+  position: fixed;
+  top: 50%;
+  left: calc(50% + 410px);
+  margin-top: -40px;
+  width: 250px;
+  background: #ef5350;
+  padding: 12px 18px;
+  border: 3px solid #ff1744;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+#notification[hidden] {
+  display: none;
+}
+
+.notification-content h2 {
+  font-size: 1.1rem;
+  color: #ffffff;
+  text-align: center;
+  font-weight: 700;
+  white-space: pre-line;
+  margin: 0;
+}
+
+@media (max-width: 850px) {
+  #border {
+    width: 95vw;
+    height: 70vh;
+  }
+  
+  h1 {
+    font-size: 2.2rem;
+  }
+  
+  #bricks {
+    grid-template-columns: repeat(8, 1fr);
+    grid-gap: 5px;
+    top: 50px;
+  }
+  
+  .brick {
+    height: 20px;
+  }
+  
+  #paddle {
+    width: 100px;
+    height: 16px;
+  }
+  
+  #ball {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  
+  #Time, #Score, #lives {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+  
+  #bricks {
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 4px;
+    top: 40px;
+  }
+  
+  .brick {
+    height: 18px;
+  }
+  
+  #paddle {
+    width: 90px;
+    height: 14px;
+    bottom: 30px;
+  }
+  
+  #ball {
+    width: 16px;
+    height: 16px;
+  }
+  
+  #pauseMenu h2,
+  #gameOverMenu h2 {
+    font-size: 1.8rem;
+  }
+  
+  #pauseMenu p,
+  #gameOverMenu p {
+    font-size: 1rem;
+  }
+  
+  #pauseMenu button,
+  #gameOverMenu button {
+    padding: 10px 24px;
+    font-size: 0.9rem;
+  }
+  
+  #startScreen {
+    min-width: 90vw;
+    padding: 30px 20px;
+  }
+}

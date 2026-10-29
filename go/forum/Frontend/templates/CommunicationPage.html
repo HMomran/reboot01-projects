@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="/static/CommunicationPage.css">
+    <title>Forum</title>
+</head>
+<body>
+    <header>
+        <h1>Forum Posts</h1>
+        <nav>
+            {{if .IsLoggedIn}}
+                <a href="/logout">Logout</a>
+            {{else}}
+                <a href="/signin">Sign In</a>
+                <a href="/signup">Sign Up</a>
+            {{end}}
+        </nav>
+    </header>
+
+    {{if .ErrorMsg}}
+    <div style="position: fixed; top: 20px; right: 20px; background: #ef4444; color: white; padding: 15px 20px; border-radius: 10px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span>⚠️</span>
+            <span>{{.ErrorMsg}}</span>
+            <a href="/communication" style="color: white; text-decoration: none; margin-left: 10px; font-weight: bold;">[×]</a>
+        </div>
+    </div>
+    {{end}}
+
+    <section class="filters">
+        <form method="GET">
+            <div class="category-checkboxes">
+                {{range .Categories}}
+                <label class="category-checkbox-label">
+                    <input type="checkbox" name="category" value="{{.ID}}"
+                    {{$catID := printf "%d" .ID}}
+                    {{range $.SelectedCategories}}{{if eq . $catID}}checked{{end}}{{end}}>
+                    <span class="checkbox-custom"></span>
+                    <span class="category-name">{{.Name}}</span>
+                </label>
+                {{end}}
+            </div>
+            <button type="submit" class="filter-btn">Filter</button>
+        </form>
+    </section>
+
+    {{if .IsLoggedIn}}
+    <section class="user-filters">
+        <div class="filter-buttons">
+            <a href="/communication" class="user-filter-btn {{if eq .CurrentFilter ""}}active{{end}}">
+                🌐 All Posts
+            </a>
+            <a href="/communication?filter=created" class="user-filter-btn {{if eq .CurrentFilter "created"}}active{{end}}">
+                📝 My Posts
+            </a>
+            <a href="/communication?filter=liked" class="user-filter-btn {{if eq .CurrentFilter "liked"}}active{{end}}">
+                ❤️ Liked Posts
+            </a>
+        </div>
+    </section>
+    {{end}}
+
+    {{if .IsLoggedIn}}
+    <section class="create-post-action">
+        <div class="create-post-banner">
+            <div class="banner-content">
+                <h2>💭 Got something to share?</h2>
+                <p>Share your thoughts, ideas, and questions with the community</p>
+                <a href="/create-post-page" class="create-post-btn">✏️ Create New Post</a>
+            </div>
+        </div>
+    </section>
+    {{else}}
+    <section class="guest-message">
+        <div class="guest-content">
+            <h2>👋 Welcome, Guest!</h2>
+            <p>You're browsing as a guest. Sign in to create posts, like, and interact with the community!</p>
+            <div class="guest-actions">
+                <a href="/signin" class="btn-signin">Sign In</a>
+                <a href="/signup" class="btn-signup">Create Account</a>
+            </div>
+        </div>
+    </section>
+    {{end}}
+
+    <section class="posts">
+        {{range .Posts}}
+        <article class="post">
+            <h3>{{.Title}}</h3>
+            <p class="author">By: {{.Author}}</p>
+            
+            {{if .Categories}}
+            <div class="post-categories">
+                {{range .Categories}}
+                <span class="category-tag">{{.}}</span>
+                {{end}}
+            </div>
+            {{end}}
+            
+            <p class="content">{{.Content}}</p>
+            <p class="date">{{.CreatedAt}}</p>
+            
+            <div class="reactions">
+                {{if $.IsLoggedIn}}
+                <form method="POST" action="/like" style="display: inline;">
+                    <input type="hidden" name="post_id" value="{{.ID}}">
+                    <button type="submit">👍 Like ({{.Likes}})</button>
+                </form>
+                <form method="POST" action="/dislike" style="display: inline;">
+                    <input type="hidden" name="post_id" value="{{.ID}}">
+                    <button type="submit">👎 Dislike ({{.Dislikes}})</button>
+                </form>
+                {{else}}
+                <span>👍 {{.Likes}} | 👎 {{.Dislikes}}</span>
+                <p class="login-prompt">
+                    <a href="/signin">Sign in</a> to like and interact with posts
+                </p>
+                {{end}}
+            </div>
+
+            <div class="comments">
+                <h4>Comments</h4>
+
+                {{if .Comments}}
+                    {{range .Comments}}
+                        <div class="comment">
+                            <p><strong>{{.Author}}:</strong> {{.Content}}</p>
+                            <small>{{.CreatedAt}}</small>
+                            
+                            <div class="comment-reactions">
+                                {{if $.IsLoggedIn}}
+                                <form method="POST" action="/like-comment" style="display: inline;">
+                                    <input type="hidden" name="comment_id" value="{{.ID}}">
+                                    <button type="submit" class="reaction-btn like-btn">👍 {{.Likes}}</button>
+                                </form>
+                                <form method="POST" action="/dislike-comment" style="display: inline;">
+                                    <input type="hidden" name="comment_id" value="{{.ID}}">
+                                    <button type="submit" class="reaction-btn dislike-btn">👎 {{.Dislikes}}</button>
+                                </form>
+                                {{else}}
+                                <span class="reaction-display">👍 {{.Likes}} | 👎 {{.Dislikes}}</span>
+                                {{end}}
+                            </div>
+                        </div>
+                    {{end}}
+                {{else}}
+                    <p class="no-comments">No comments yet. Be the first to comment!</p>
+                {{end}}
+
+                {{if $.IsLoggedIn}}
+                <form action="/add-comment" method="POST" class="comment-form">
+                    <input type="hidden" name="post_id" value="{{.ID}}">
+                    <label for="comment-{{.ID}}" class="sr-only">Your Comment</label>
+                    <textarea 
+                        id="comment-{{.ID}}" 
+                        name="content" 
+                        placeholder="Write a comment (max 50 chars)" 
+                        required 
+                        minlength="2"
+                        maxlength="50"
+                    ></textarea>
+                    <small class="char-limit-info">Maximum 50 characters</small>
+                    <button type="submit">💬 Comment</button>
+                </form>
+                {{else}}
+                <p class="login-prompt">
+                    <a href="/signin">Sign in</a> to comment.
+                </p>
+                {{end}}
+            </div>
+        </article>
+        {{else}}
+        <p class="no-posts-message">
+            {{if eq .CurrentFilter "created"}}
+                You haven't created any posts yet. <a href="/create-post-page">Create your first post!</a>
+            {{else if eq .CurrentFilter "liked"}}
+                You haven't liked any posts yet. Browse posts and like the ones you enjoy!
+            {{else if .SelectedCategories}}
+                No posts found in the selected categories. <a href="/communication">View all posts</a> or try different categories.
+            {{else}}
+                No posts yet. {{if .IsLoggedIn}}Be the first to create one!{{else}}<a href="/signin">Sign in</a> // <a href="/signup">Sign Up</a> create the first post!{{end}}
+            {{end}}
+        </p>
+        {{end}}
+    </section>
+
+    {{if .IsLoggedIn}}
+    <div class="floating-create-btn">
+        <a href="/create-post-page" class="floating-btn">
+            <span class="btn-icon">✏️</span>
+            <span class="btn-text">Create Post</span>
+        </a>
+    </div>
+    {{end}}
+</body>
+</html>

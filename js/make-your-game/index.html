@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brick Breaker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 style="color: gray; text-align: center;">Brick Breaker</h1>
+    <div id="startScreen">
+      <div class="start-content">
+        <h2>Enter Your Name</h2>
+        <input type="text" id="usernameInput" placeholder="Your Name" maxlength="20">
+        <button id="startBtn">Start Game</button>
+        <div id="usernameConfirm" hidden>
+          <p id="confirmMessage"></p>
+          <div class="confirm-buttons">
+            <button id="confirmYes">Yes</button>
+            <button id="confirmNo">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="gameInfo" hidden>
+        <div id="Time">TIME: 02:00</div>
+        <div id="Score">SCORE: 0</div>
+        <div id="lives">Lives: 3</div>
+        <div id="roundInfo">Level: 1</div>
+        <div id="fps">FPS: 60</div>
+        <div id="gameInfoNotification" hidden></div>
+    </div>
+    <div id="border" hidden>
+        <div id="bricks"></div>
+        <div id="paddle"></div>
+        <div id="ball"></div>
+        <div id="launchMessage" hidden>Press ↑ to launch, Press ESC to pause</div>
+        <div id="notification" hidden>
+          <div class="notification-content">
+            <h2 id="notificationText"></h2>
+          </div>
+        </div>
+    </div>
+    <div id="pauseMenu" hidden>
+      <h2>PAUSED</h2>
+      <button id="resumeBtn">Continue</button>
+      <button id="restartBtn">Restart</button>
+    </div>
+    <div id="gameOverMenu" hidden>
+      <h2 id="game-over-title">GAME OVER</h2>
+      <p id="finalScore"></p>
+      <div id="leaderboard">
+        <h3>Leaderboard</h3>
+        <table id="leaderboardTable">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Player</th>
+              <th>Score</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+      <button id="playAgainBtn">Play Again</button>
+      <button id="exitBtn">Exit</button>
+    </div>
+    <script type="module" src="js/index.js"></script>
+</body>
+</html>

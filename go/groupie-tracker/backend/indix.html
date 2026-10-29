@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Artist Collection</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #f0f4f8, #d9e2ec);
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #222;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, #6c5ce7, #a29bfe);
+            border-radius: 3px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-body h2 {
+            margin: 0 0 12px;
+            font-size: 1.4rem;
+            color: #333;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .card-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #555;
+        }
+
+        .card-meta i {
+            color: #6c5ce7;
+        }
+
+        .members {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+            color: #a29bfe;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h3 {
+            color: #444;
+            margin-bottom: 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <h1>Artist Collection</h1>
+
+    <div class="grid">
+        {{range .}}
+        <a href="/details?id={{.ID}}" class="card">
+            <img src="{{.Image}}" alt="{{.Name}}" class="card-image">
+            <div class="card-body">
+                <h2>{{.Name}}</h2>
+                <div class="card-meta">
+                    <span><i class="fas fa-calendar-alt"></i> {{.CreationDate}}</span>
+                    <span><i class="fas fa-compact-disc"></i> {{.FirstAlbum}}</span>
+                </div>
+                <p class="members">
+                    <strong>Members:</strong> {{range $i, $m := .Members}}{{if $i}}, {{end}}{{.}}{{end}}
+                </p>
+            </div>
+        </a>
+        {{else}}
+        <div class="empty-state">
+            <i class="fas fa-music"></i>
+            <h3>No Artists Found</h3>
+            <p>There are currently no artists in the collection.</p>
+        </div>
+        {{end}}
+    </div>
+</body>
+</html>

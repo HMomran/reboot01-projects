@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-Time Forum</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <!-- ── Navbar ─────────────────────────────────────── -->
+    <nav id="main-navbar"></nav>
+
+    <!-- ── Auth pages ─────────────────────────────────── -->
+    <div id="login-page"></div>
+    <div id="register-page"></div>
+
+    <!-- ── Main app shell ─────────────────────────────── -->
+    <main id="app-page">
+      <aside id="online-users-sidebar"></aside>
+      <div id="app-content">
+        <section id="posts-page"></section>
+        <section id="post-detail-page"></section>
+        <section id="chat-panel"></section>
+      </div>
+    </main>
+
+    <!-- ── Overlays ───────────────────────────────────── -->
+    <div id="sidebar-backdrop"></div>
+    <div id="server-error-overlay" hidden></div>
+    <div id="http-error-overlay"   hidden></div>
+
+    <script src="app.js"></script>
+    <script src="Login.js"></script>
+    <script src="Registration.js"></script>
+    <script src="Posts.js"></script>
+    <script src="PostDetail.js"></script>
+    <script src="Chat.js"></script>
+    <script src="init.js"></script>
+
+  </body>
+</html>
